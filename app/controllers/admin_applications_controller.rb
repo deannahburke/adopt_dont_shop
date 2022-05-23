@@ -1,24 +1,28 @@
-class AdminApplicationsController < ApplicationController 
+class AdminApplicationsController < ApplicationController
     def index
         @applications = Application.all
     end
-    
+
     def show
         @application = Application.find(params[:id])
     end
 
     def update
         application_pet = ApplicationPet.find(params[:app_id])
+        application = application_pet.application
         if params[:status] == 'Approve'
             application_pet.pet_status = 'Approved'
         elsif params[:status] == 'Reject'
             application_pet.pet_status = 'Rejected'
-            application_pet.application.status = 'Rejected'
+            application.status = 'Rejected'
         end
         application_pet.save
-        application_pet.application.save
-        redirect_to "/admin/applications/#{application_pet.application.id}"
+          if application.application_pets.where(pet_status: 'Approved').count == application.pets.count
+            application.status = 'Accepted'
+          end
+        application.save
+        redirect_to "/admin/applications/#{application.id}"
     end
-    
-    
+
+
 end

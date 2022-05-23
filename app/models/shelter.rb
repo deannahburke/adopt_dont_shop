@@ -19,7 +19,7 @@ class Shelter < ApplicationRecord
   def self.reverse_alphabetical
     find_by_sql("SELECT * FROM shelters ORDER BY name DESC")
   end
-  
+
   def self.with_pending_applications
     Shelter.joins(pets: :applications).where("applications.status = ?", 1).distinct
   end
@@ -35,11 +35,11 @@ class Shelter < ApplicationRecord
       find_by_sql("SELECT id, name FROM shelters WHERE id=#{shelter_id}").first.name
     end
   end
-  
+
   def average_pet_age
     pets.where(adoptable: :true).average(:age)
   end
-  
+
 
   def pet_count
     pets.count
@@ -48,7 +48,7 @@ class Shelter < ApplicationRecord
   def adoptable_pets
     pets.where(adoptable: true)
   end
-  
+
   def adoptable_pet_count
     pets.where(adoptable: true).count
   end
