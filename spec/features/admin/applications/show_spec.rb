@@ -129,5 +129,17 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       expect(page).to_not have_content("Status: In Progress")
       expect(page).to_not have_content("Status: Rejected")
     end
+    it 'changes application status to rejected if one or more pets is rejected' do
+      visit "/admin/applications/#{@application_1.id}"
+      click_button "Approve Rajah"
+      click_button "Reject Stacks"
+      click_button "Approve Pavel"
+
+      expect(current_path).to eq("/admin/applications/#{@application_1.id}")
+      expect(page).to have_content("Status: Rejected")
+      expect(page).to_not have_content("Status: Accepted")
+      expect(page).to_not have_content("Status: In Progress")
+      expect(page).to_not have_content("Status: Pending")
+    end
   end
 end
