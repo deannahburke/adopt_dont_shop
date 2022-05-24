@@ -32,8 +32,9 @@
             <% app_pet_status << application[:status] %>
         <% end %>
 
-        <% if app_pet_status.include?("Approved")%>
+        <% if app_pet_status.include?("Approved") || app_pet_status.include?("Pending") %>
             <%= "#{app_pet.pet.name} has been approved for adoption" %>
+            <%= button_to "Reject #{app_pet.pet.name}", "/admin/applications/#{@application.id}", method: :patch, params: {app_id: app_pet.id, status: 'Reject'} %>
         <% else %>
             <%= button_to "Approve #{app_pet.pet.name}", "/admin/applications/#{@application.id}", method: :patch, params: {app_id: app_pet.id, status: 'Approve'} %>
             <%= button_to "Reject #{app_pet.pet.name}", "/admin/applications/#{@application.id}", method: :patch, params: {app_id: app_pet.id, status: 'Reject'} %>

@@ -40,6 +40,15 @@ RSpec.describe 'Admin Shelter Index Page' do
             end
         end
 
+        it "oraders section for shelters with pending applications alphabetically" do
+            visit '/admin/shelters'
+            within "#shelters-with-pending-applications" do
+                expect("Denver Dumb Friends").to appear_before("Humane Society")
+                expect(page).to_not have_content("Boulder County Shelter") 
+                expect(page).to_not have_content("MaxFund Shelter") 
+            end
+        end
+
         it "has a link from admin shelter index to admin shelter show pages" do
             visit '/admin/shelters'
             click_link 'Denver Dumb Friends League'

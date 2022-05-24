@@ -91,6 +91,8 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       @boulder_county = Shelter.create!(name: 'Boulder County Shelter', city: 'Boulder', rank: 7, foster_program: true)
       @application_1 = Application.create!(name: 'Antonio', street_address: '1234 Drury Lane', city: 'San Francisco', state: 'CA', zip_code: '94016', description: 'God', status: 0)
       @application_2 = Application.create!(name: 'Casey', street_address: '1564 Pearl Street', city: 'Boulder', state: 'C0', zip_code: '80037', description: 'Allah', status: 0)
+      @application_3 = Application.create!(name: 'Carlos', street_address: '1564 Pearl Street', city: 'Boulder', state: 'C0', zip_code: '80037', description: 'Allah', status: 1)
+      @application_4 = Application.create!(name: 'Mora', street_address: '1564 Pearl Street', city: 'Boulder', state: 'C0', zip_code: '80037', description: 'Allah', status: 2)
       @rajah = @dumb_friends.pets.create!(name: 'Rajah', breed: 'cat', age: 5, adoptable: false)
       @stacks = @dumb_friends.pets.create!(name: 'Stacks', breed: 'german shepherd', age: 10, adoptable: true)
       @flaubert = @boulder_county.pets.create!(name: 'Flaubert', breed: 'terrier', age: 2, adoptable: true)
@@ -101,6 +103,8 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       ApplicationPet.create!(application: @application_2, pet: @rajah)
       ApplicationPet.create!(application: @application_2, pet: @stacks)
       ApplicationPet.create!(application: @application_2, pet: @flaubert)
+      ApplicationPet.create!(application: @application_3, pet: @flaubert)
+      ApplicationPet.create!(application: @application_4, pet: @flaubert)
     end
 
     it 'approves all pets and changes status to "Accepted"' do
@@ -121,9 +125,7 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       click_button "Submit Application"
 
       visit "/admin/applications/#{@application_1.id}"
-      click_button "Approve Rajah"
 
-      expect(current_path).to eq("/admin/applications/#{@application_1.id}")
       expect(page).to have_content("Status: Pending")
       expect(page).to_not have_content("Status: Accepted")
       expect(page).to_not have_content("Status: In Progress")
@@ -141,6 +143,12 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       expect(page).to_not have_content("Status: In Progress")
       expect(page).to_not have_content("Status: Pending")
     end
+    it "does not allow adoption approval of a pet that has an approved/pending application" do
+      visit "/admin/applications/#{@application_3.id}"
+      expect(page).to have_button("Reject Flaubert")
+      expect(page).to_not have_button("Adopt Flaubert")
+    end
+    
   end
 
   describe 'application approval makes pets not adoptable' do
