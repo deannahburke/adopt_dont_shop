@@ -51,6 +51,7 @@ RSpec.describe 'Admin Shelter Show Page' do
                 expect(page).to have_content("Number of Adoptable Pets: 3")
             end
         end
+
     end
     
 end
