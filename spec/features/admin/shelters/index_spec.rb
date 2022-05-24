@@ -39,6 +39,12 @@ RSpec.describe 'Admin Shelter Index Page' do
                 expect(page).to_not have_content("MaxFund Shelter") 
             end
         end
+
+        it "has a link from admin shelter index to admin shelter show pages" do
+            visit '/admin/shelters'
+            click_link 'Denver Dumb Friends League'
+            expect(current_path).to eq("/admin/shelters/#{@dumb_friends.id}")
+        end
         
     end
 end
