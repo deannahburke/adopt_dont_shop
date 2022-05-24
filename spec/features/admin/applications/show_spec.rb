@@ -142,4 +142,42 @@ RSpec.describe "Admin Shelter Show Page", type: :feature do
       expect(page).to_not have_content("Status: Pending")
     end
   end
+
+  describe 'application approval makes pets not adoptable' do
+    before :each do
+      @dumb_friends = Shelter.create!(name: 'Denver Dumb Friends League', city: 'Denver', rank: 4, foster_program: true)
+      @boulder_county = Shelter.create!(name: 'Boulder County Shelter', city: 'Boulder', rank: 7, foster_program: true)
+      @application_1 = Application.create!(name: 'Antonio', street_address: '1234 Drury Lane', city: 'San Francisco', state: 'CA', zip_code: '94016', description: 'God', status: 0)
+      @application_2 = Application.create!(name: 'Casey', street_address: '1564 Pearl Street', city: 'Boulder', state: 'C0', zip_code: '80037', description: 'Allah', status: 0)
+      @rajah = @dumb_friends.pets.create!(name: 'Rajah', breed: 'cat', age: 5, adoptable: true)
+      @stacks = @dumb_friends.pets.create!(name: 'Stacks', breed: 'german shepherd', age: 10, adoptable: true)
+      @flaubert = @boulder_county.pets.create!(name: 'Flaubert', breed: 'terrier', age: 2, adoptable: true)
+      @pavel = @boulder_county.pets.create!(name: 'Pavel', breed: 'cat', age: 4, adoptable: true)
+      ApplicationPet.create!(application: @application_1, pet: @rajah)
+      ApplicationPet.create!(application: @application_1, pet: @stacks)
+      ApplicationPet.create!(application: @application_1, pet: @pavel)
+      ApplicationPet.create!(application: @application_2, pet: @rajah)
+      ApplicationPet.create!(application: @application_2, pet: @stacks)
+      ApplicationPet.create!(application: @application_2, pet: @flaubert)
+    end
+
+    it 'makes pets no longer adoptable after their application is approved' do
+      visit "/admin/applications/#{@application_1.id}"
+      click_button "Approve Rajah"
+      click_button "Approve Stacks"
+      click_button "Approve Pavel"
+
+      visit "/pets/#{@rajah.id}"
+      expect(page).to have_content('Adoptable: false')
+      expect(page).to_not have_content('Adoptable: true')
+
+      visit "/pets/#{@stacks.id}"
+      expect(page).to have_content('Adoptable: false')
+      expect(page).to_not have_content('Adoptable: true')
+
+      visit "/pets/#{@pavel.id}"
+      expect(page).to have_content('Adoptable: false')
+      expect(page).to_not have_content('Adoptable: true')
+    end
+  end
 end
