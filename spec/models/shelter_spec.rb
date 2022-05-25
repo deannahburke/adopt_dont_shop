@@ -30,7 +30,6 @@ RSpec.describe Shelter, type: :model do
     ApplicationPet.create!(application: @application_2, pet: @pet_2)
     ApplicationPet.create!(application: @application_3, pet: @pet_3)
     ApplicationPet.create!(application: @application_2, pet: @pet_4)
-    
   end
 
   describe 'class methods' do
@@ -63,14 +62,13 @@ RSpec.describe Shelter, type: :model do
         expect(Shelter.with_pending_applications).to eq([@shelter_1])
       end
 
-      it "orders sheleters with pending applciations by name" do
+      it "orders shelters with pending applications by name" do
         @shelter_4 = Shelter.create(name: ' AA Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
         @pet_5 = @shelter_4.pets.create(name: 'Ann', breed: 'ragdoll', age: 5, adoptable: true)
         @application_3 = Application.create!(name: 'Deannah', street_address: '1424 Pennsylvania Ave', city: 'Denver', state: 'CO', zip_code: '80214', description: 'Mohammed', status: 1)
         ApplicationPet.create!(application: @application_3, pet: @pet_5)
         expect(Shelter.with_pending_applications).to eq([@shelter_4, @shelter_1])
       end
-      
     end
 
     describe '.make_name_readable' do
@@ -98,7 +96,6 @@ RSpec.describe Shelter, type: :model do
         expect(@shelter_1.adoptable_pet_count).to eq(2)
       end
     end
-
 
     describe '#average_pet_age' do
       it 'calculates the average pet age of a shelter for adoptable pets' do

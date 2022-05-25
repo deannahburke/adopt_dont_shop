@@ -13,9 +13,9 @@ RSpec.describe Application, type: :model do
     it {should allow_value("Accepted").for(:status)}
     it {should allow_value("Rejected").for(:status)}
   end
+
   describe 'relationships' do
     it {should have_many :application_pets}
     it {should have_many(:pets).through(:application_pets)}
   end
-
 end

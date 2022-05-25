@@ -8,7 +8,6 @@ class ApplicationsController < ApplicationController
   end
 
   def new
-
   end
 
   def create
@@ -16,7 +15,8 @@ class ApplicationsController < ApplicationController
     if application.save
       redirect_to "/applications/#{application.id}"
     else
-      redirect_to "/applications/new", alert: "Application not created: Required information missing"
+      redirect_to "/applications/new"
+      flash[:alert] = "Application not created: Required information missing"
     end
   end
 
@@ -32,11 +32,9 @@ class ApplicationsController < ApplicationController
     redirect_to "/applications/#{application.id}"
   end
 
-
   private
 
-  def application_params
-    params.permit(:name, :street_address, :city, :state, :zip_code, :description)
-  end
-
+    def application_params
+      params.permit(:name, :street_address, :city, :state, :zip_code, :description)
+    end
 end

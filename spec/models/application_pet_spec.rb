@@ -20,8 +20,5 @@ RSpec.describe ApplicationPet, type: :model do
     ApplicationPet.create!(application: @application_1, pet: @pet_1)
     ApplicationPet.create!(application: @application_2, pet: @pet_2)
     ApplicationPet.create!(application: @application_2, pet: @pet_4)
-    
   end
-  
-
 end
